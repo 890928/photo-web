@@ -1,65 +1,132 @@
+"use client";
+
 import Image from "next/image";
+import Link from "next/link";
+import Hero from "@/components/Hero";
+import ScrollReveal from "@/components/ScrollReveal";
+import PageTransition from "@/components/PageTransition";
+import { portfolioItems } from "@/data/portfolio";
+
+const featured = portfolioItems.slice(0, 6);
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <PageTransition>
+      {/* Hero 區域 */}
+      <Hero />
+
+      {/* 精選作品 */}
+      <section className="mx-auto max-w-7xl px-4 py-16 md:px-6 md:py-24">
+        <ScrollReveal>
+          <div className="text-center">
+            <p className="text-xs tracking-[0.3em] uppercase text-muted">
+              Gallery
+            </p>
+            <h2 className="mt-3 font-serif text-2xl tracking-wide sm:text-3xl md:text-4xl">
+              作品展示
+            </h2>
+          </div>
+        </ScrollReveal>
+
+        <div className="mt-10 grid grid-cols-2 gap-2 sm:gap-4 md:mt-16 lg:grid-cols-3">
+          {featured.map((item, i) => (
+            <ScrollReveal key={item.id} delay={i * 0.1}>
+              <div className="group relative aspect-[4/5] overflow-hidden bg-border">
+                <Image
+                  src={item.src}
+                  alt={item.alt}
+                  fill
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                />
+                <div className="absolute inset-0 bg-black/0 transition-all duration-500 group-hover:bg-black/30" />
+                <div className="absolute inset-0 flex flex-col items-center justify-center opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+                  <p className="font-serif text-lg text-white">
+                    {item.client}
+                  </p>
+                  <p className="mt-1 text-xs tracking-wider text-white/70">
+                    {item.date}
+                  </p>
+                </div>
+              </div>
+            </ScrollReveal>
+          ))}
+        </div>
+
+        <ScrollReveal>
+          <div className="mt-12 text-center">
+            <Link
+              href="/portfolio"
+              className="inline-block border border-foreground/20 px-8 py-3 text-xs tracking-[0.2em] uppercase text-foreground transition-all duration-300 hover:border-accent hover:bg-accent hover:text-white"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+              瀏覽全部作品
+            </Link>
+          </div>
+        </ScrollReveal>
+      </section>
+
+      {/* 工作室介紹 */}
+      <section className="bg-card">
+        <div className="mx-auto grid max-w-7xl gap-8 px-4 py-16 md:gap-12 md:px-6 md:py-24 md:grid-cols-2 md:items-center">
+          <ScrollReveal>
+            <div className="relative aspect-[4/3] overflow-hidden md:aspect-[3/4]">
+              <Image
+                src="https://images.unsplash.com/photo-1554048612-b6a482bc67e5?w=800&q=80"
+                alt="攝影師工作中"
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 50vw"
+              />
+            </div>
+          </ScrollReveal>
+
+          <ScrollReveal delay={0.2}>
+            <div className="max-w-md">
+              <p className="text-xs tracking-[0.3em] uppercase text-muted">
+                About Studio
+              </p>
+              <h2 className="mt-3 font-serif text-3xl leading-snug tracking-wide md:text-4xl">
+                韓式美學
+                <br />
+                精緻呈現
+              </h2>
+              <p className="mt-6 text-sm leading-relaxed text-muted">
+                小琳數位照相館專注韓式證件照與形象照拍攝，採用韓國專業打光技術與精緻修圖，讓每一張照片都展現最自然、最好看的你。
+              </p>
+              <p className="mt-4 text-sm leading-relaxed text-muted">
+                從證件照、求職履歷照到個人形象寫真——我們用專業的韓式美學，為你打造最具自信的第一印象。
+              </p>
+              <Link
+                href="/about"
+                className="mt-8 inline-block text-xs tracking-[0.2em] uppercase text-foreground underline underline-offset-4 transition-colors hover:text-accent"
+              >
+                了解更多
+              </Link>
+            </div>
+          </ScrollReveal>
+        </div>
+      </section>
+
+      {/* CTA 區域 */}
+      <section className="mx-auto max-w-7xl px-4 py-16 text-center md:px-6 md:py-24">
+        <ScrollReveal>
+          <p className="text-xs tracking-[0.3em] uppercase text-muted">
+            Book Now
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+          <h2 className="mt-3 font-serif text-2xl tracking-wide sm:text-3xl md:text-4xl">
+            拍出你的最佳形象
+          </h2>
+          <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-muted">
+            無需預約，隨到隨拍。也歡迎提前聯繫我們，預留您的專屬拍攝時段。
+          </p>
+          <Link
+            href="/contact"
+            className="mt-8 inline-block bg-foreground px-10 py-4 text-xs tracking-[0.2em] uppercase text-background transition-all duration-300 hover:bg-accent"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+            立即預約
+          </Link>
+        </ScrollReveal>
+      </section>
+    </PageTransition>
   );
 }
