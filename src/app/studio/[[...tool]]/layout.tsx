@@ -7,9 +7,5 @@ export default function StudioLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <html lang="zh-TW">
-      <body style={{ margin: 0 }}>{children}</body>
-    </html>
-  );
+  return <div style={{ height: "100vh" }}>{children}</div>;
 }
