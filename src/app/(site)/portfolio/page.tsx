@@ -3,6 +3,8 @@ import ScrollReveal from "@/components/ScrollReveal";
 import PortfolioContent from "@/components/PortfolioContent";
 import { getPortfolioItems } from "@/sanity/fetch";
 
+export const revalidate = 60;
+
 export default async function PortfolioPage() {
   const items = await getPortfolioItems();
 

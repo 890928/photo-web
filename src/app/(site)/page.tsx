@@ -5,6 +5,8 @@ import ScrollReveal from "@/components/ScrollReveal";
 import PageTransition from "@/components/PageTransition";
 import { getHeroSlides, getPortfolioItems } from "@/sanity/fetch";
 
+export const revalidate = 60;
+
 export default async function Home() {
   const [heroSlides, portfolioItems] = await Promise.all([
     getHeroSlides(),
