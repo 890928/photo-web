@@ -5,7 +5,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 
-const slides = [
+interface HeroSlide {
+  src: string;
+  alt: string;
+  title: string;
+  subtitle: string;
+}
+
+const defaultSlides: HeroSlide[] = [
   {
     src: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1600&q=80",
     alt: "韓式證件照",
@@ -26,12 +33,13 @@ const slides = [
   },
 ];
 
-export default function Hero() {
+export default function Hero({ slides: propSlides }: { slides?: HeroSlide[] }) {
+  const slides = propSlides && propSlides.length > 0 ? propSlides : defaultSlides;
   const [current, setCurrent] = useState(0);
 
   const next = useCallback(() => {
     setCurrent((prev) => (prev + 1) % slides.length);
-  }, []);
+  }, [slides.length]);
 
   useEffect(() => {
     const timer = setInterval(next, 5000);

@@ -1,19 +1,22 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
 import Hero from "@/components/Hero";
 import ScrollReveal from "@/components/ScrollReveal";
 import PageTransition from "@/components/PageTransition";
-import { portfolioItems } from "@/data/portfolio";
+import { getHeroSlides, getPortfolioItems } from "@/sanity/fetch";
 
-const featured = portfolioItems.slice(0, 6);
+export default async function Home() {
+  const [heroSlides, portfolioItems] = await Promise.all([
+    getHeroSlides(),
+    getPortfolioItems(),
+  ]);
 
-export default function Home() {
+  const featured = portfolioItems.slice(0, 6);
+
   return (
     <PageTransition>
       {/* Hero 區域 */}
-      <Hero />
+      <Hero slides={heroSlides.length > 0 ? heroSlides : undefined} />
 
       {/* 精選作品 */}
       <section className="mx-auto max-w-7xl px-4 py-16 md:px-6 md:py-24">
