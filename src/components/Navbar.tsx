@@ -22,55 +22,63 @@ export default function Navbar({
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 md:px-6 md:py-5">
-        {/* Logo */}
-        <Link
-          href="/"
-          className="font-serif text-base tracking-wider text-foreground md:text-lg"
-        >
-          {siteName}
-        </Link>
+    <>
+      <nav
+        className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-300 ${
+          isOpen
+            ? "bg-background"
+            : "bg-background/80 backdrop-blur-md"
+        }`}
+      >
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 md:px-6 md:py-5">
+          {/* Logo */}
+          <Link
+            href="/"
+            className="font-serif text-base tracking-wider text-foreground md:text-lg"
+          >
+            {siteName}
+          </Link>
 
-        {/* Desktop Nav */}
-        <div className="hidden items-center gap-8 md:flex">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={`text-sm tracking-wider uppercase transition-colors duration-300 ${
-                pathname === link.href
-                  ? "text-accent-dark"
-                  : "text-muted hover:text-foreground"
-              }`}
-            >
-              {link.label}
-            </Link>
-          ))}
+          {/* Desktop Nav */}
+          <div className="hidden items-center gap-8 md:flex">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`text-sm tracking-wider uppercase transition-colors duration-300 ${
+                  pathname === link.href
+                    ? "text-accent-dark"
+                    : "text-muted hover:text-foreground"
+                }`}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
+
+          {/* Mobile Hamburger */}
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="relative flex h-8 w-8 flex-col items-center justify-center gap-1.5 md:hidden"
+            aria-label="Toggle menu"
+          >
+            <motion.span
+              animate={isOpen ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }}
+              className="block h-[1.5px] w-6 bg-foreground"
+            />
+            <motion.span
+              animate={isOpen ? { opacity: 0 } : { opacity: 1 }}
+              className="block h-[1.5px] w-6 bg-foreground"
+            />
+            <motion.span
+              animate={isOpen ? { rotate: -45, y: -6 } : { rotate: 0, y: 0 }}
+              className="block h-[1.5px] w-6 bg-foreground"
+            />
+          </button>
         </div>
+      </nav>
 
-        {/* Mobile Hamburger */}
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="relative z-50 flex h-8 w-8 flex-col items-center justify-center gap-1.5 md:hidden"
-          aria-label="Toggle menu"
-        >
-          <motion.span
-            animate={isOpen ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }}
-            className="block h-[1.5px] w-6 bg-foreground"
-          />
-          <motion.span
-            animate={isOpen ? { opacity: 0 } : { opacity: 1 }}
-            className="block h-[1.5px] w-6 bg-foreground"
-          />
-          <motion.span
-            animate={isOpen ? { rotate: -45, y: -6 } : { rotate: 0, y: 0 }}
-            className="block h-[1.5px] w-6 bg-foreground"
-          />
-        </button>
-      </div>
-
-      {/* Mobile Menu Overlay */}
+      {/* Mobile Menu Overlay — 獨立於 nav 之外，z-40 確保在頁面內容之上、nav 之下 */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -105,6 +113,6 @@ export default function Navbar({
           </motion.div>
         )}
       </AnimatePresence>
-    </nav>
+    </>
   );
 }
