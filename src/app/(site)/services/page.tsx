@@ -1,11 +1,16 @@
-"use client";
-
 import Link from "next/link";
 import PageTransition from "@/components/PageTransition";
 import ScrollReveal from "@/components/ScrollReveal";
-import { services } from "@/data/services";
+import { getServicePlans, getFAQs } from "@/sanity/fetch";
 
-export default function ServicesPage() {
+export const revalidate = 60;
+
+export default async function ServicesPage() {
+  const [services, faqs] = await Promise.all([
+    getServicePlans(),
+    getFAQs(),
+  ]);
+
   return (
     <PageTransition>
       <div className="pt-24 pb-16 md:pt-28 md:pb-24">
@@ -84,29 +89,12 @@ export default function ServicesPage() {
           </ScrollReveal>
 
           <div className="mt-10 space-y-8 text-left">
-            {[
-              {
-                q: "需要預約嗎？",
-                a: "證件照免預約，隨到隨拍。形象寫真與團體拍攝建議提前 2-3 天預約，以確保時段。",
-              },
-              {
-                q: "拍攝完多久可以取件？",
-                a: "標準證件照最快 15 分鐘取件。韓式證件照與形象照約 30-60 分鐘，視修圖複雜度而定。急件可另外安排。",
-              },
-              {
-                q: "韓式證件照跟一般證件照差在哪？",
-                a: "韓式證件照採用專業柔光打光，搭配精緻的韓式修圖技術，自然地優化膚色與輪廓，拍出來更好看、更有精神，同時仍符合各式證件規格要求。",
-              },
-              {
-                q: "可以自己帶服裝來拍嗎？",
-                a: "當然可以！建議穿著素色、有領的上衣效果最佳。形象照拍攝也歡迎多帶幾套衣服替換。",
-              },
-            ].map((faq, i) => (
+            {faqs.map((faq, i) => (
               <ScrollReveal key={i} delay={i * 0.08}>
                 <div className="border-b border-border pb-6">
-                  <h3 className="text-sm font-medium">{faq.q}</h3>
+                  <h3 className="text-sm font-medium">{faq.question}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-muted">
-                    {faq.a}
+                    {faq.answer}
                   </p>
                 </div>
               </ScrollReveal>

@@ -1,16 +1,21 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { getSiteSettings } from "@/sanity/fetch";
 
-export default function SiteLayout({
+export const revalidate = 60;
+
+export default async function SiteLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const siteSettings = await getSiteSettings();
+
   return (
     <>
-      <Navbar />
+      <Navbar siteName={siteSettings.siteName} />
       <main>{children}</main>
-      <Footer />
+      <Footer siteSettings={siteSettings} />
     </>
   );
 }

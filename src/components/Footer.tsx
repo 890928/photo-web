@@ -1,6 +1,11 @@
 import Link from "next/link";
+import { type SiteSettings } from "@/data/siteSettings";
 
-export default function Footer() {
+export default function Footer({
+  siteSettings,
+}: {
+  siteSettings: SiteSettings;
+}) {
   return (
     <footer className="border-t border-border bg-card">
       <div className="mx-auto max-w-7xl px-4 py-10 md:px-6 md:py-16">
@@ -8,10 +13,10 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <h3 className="font-serif text-lg tracking-wider">
-              小琳數位照相館
+              {siteSettings.siteName}
             </h3>
             <p className="mt-3 text-sm leading-relaxed text-muted">
-              新北土城韓式證件照專門店。韓式打光、精緻修圖，拍出自然好看的證件照與形象照。
+              {siteSettings.siteDescription}
             </p>
           </div>
 
@@ -44,17 +49,17 @@ export default function Footer() {
               聯絡資訊
             </h4>
             <div className="mt-4 flex flex-col gap-3 text-sm text-muted">
-              <span>0901 316 880</span>
-              <span>新北市土城區金城路三段14號B1</span>
+              <span>{siteSettings.phone}</span>
+              <span>{siteSettings.address}</span>
             </div>
           </div>
         </div>
 
         <div className="mt-8 flex flex-col items-center justify-between gap-4 border-t border-border pt-6 text-xs text-muted md:mt-16 md:pt-8 md:flex-row">
-          <p>&copy; {new Date().getFullYear()} 小琳數位照相館. 版權所有。</p>
+          <p>&copy; {new Date().getFullYear()} {siteSettings.siteName}. 版權所有。</p>
           <div className="flex gap-6">
             <a
-              href="https://www.facebook.com/profile.php?id=100091406895193"
+              href={siteSettings.facebookUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="transition-colors hover:text-foreground"

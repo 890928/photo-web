@@ -13,7 +13,11 @@ const navLinks = [
   { href: "/contact", label: "聯絡我們" },
 ];
 
-export default function Navbar() {
+export default function Navbar({
+  siteName = "小琳數位照相館",
+}: {
+  siteName?: string;
+}) {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -25,7 +29,7 @@ export default function Navbar() {
           href="/"
           className="font-serif text-base tracking-wider text-foreground md:text-lg"
         >
-          小琳數位照相館
+          {siteName}
         </Link>
 
         {/* Desktop Nav */}

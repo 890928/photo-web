@@ -1,9 +1,21 @@
 import { client, urlFor } from "./client";
-import { heroSlidesQuery, portfolioQuery } from "./queries";
+import {
+  heroSlidesQuery,
+  portfolioQuery,
+  siteSettingsQuery,
+  servicePlansQuery,
+  faqsQuery,
+} from "./queries";
 import {
   portfolioItems as staticPortfolio,
   type PortfolioItem,
 } from "@/data/portfolio";
+import {
+  defaultSiteSettings,
+  type SiteSettings,
+} from "@/data/siteSettings";
+import { services as staticServices, type ServicePlan } from "@/data/services";
+import { defaultFAQs, type FAQ } from "@/data/faqs";
 
 // Check if Sanity is configured
 const isSanityConfigured = !!process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
@@ -108,3 +120,81 @@ export async function getPortfolioItems(): Promise<PortfolioItem[]> {
     return staticPortfolio;
   }
 }
+
+export async function getSiteSettings(): Promise<SiteSettings> {
+  if (!isSanityConfigured) return defaultSiteSettings;
+
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const data: any = await client!.fetch(siteSettingsQuery);
+    if (!data) return defaultSiteSettings;
+
+    return {
+      siteName: data.siteName || defaultSiteSettings.siteName,
+      siteDescription:
+        data.siteDescription || defaultSiteSettings.siteDescription,
+      phone: data.phone || defaultSiteSettings.phone,
+      address: data.address || defaultSiteSettings.address,
+      businessHours:
+        data.businessHours || defaultSiteSettings.businessHours,
+      facebookUrl: data.facebookUrl || defaultSiteSettings.facebookUrl,
+      aboutTitle: data.aboutTitle || defaultSiteSettings.aboutTitle,
+      aboutParagraphs:
+        data.aboutParagraphs && data.aboutParagraphs.length > 0
+          ? data.aboutParagraphs
+          : defaultSiteSettings.aboutParagraphs,
+      aboutFeatures:
+        data.aboutFeatures && data.aboutFeatures.length > 0
+          ? data.aboutFeatures
+          : defaultSiteSettings.aboutFeatures,
+      aboutImage: data.aboutImage
+        ? urlFor(data.aboutImage as Parameters<typeof urlFor>[0])
+            .width(800)
+            .quality(80)
+            .url()
+        : defaultSiteSettings.aboutImage,
+    };
+  } catch {
+    return defaultSiteSettings;
+  }
+}
+
+export async function getServicePlans(): Promise<ServicePlan[]> {
+  if (!isSanityConfigured) return staticServices;
+
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const data: any[] = await client!.fetch(servicePlansQuery);
+    if (!data || data.length === 0) return staticServices;
+
+    return data.map((item, index) => ({
+      id: index + 1,
+      name: item.name,
+      price: item.price,
+      description: item.description || "",
+      features: item.features || [],
+      popular: item.popular || false,
+    }));
+  } catch {
+    return staticServices;
+  }
+}
+
+export async function getFAQs(): Promise<FAQ[]> {
+  if (!isSanityConfigured) return defaultFAQs;
+
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const data: any[] = await client!.fetch(faqsQuery);
+    if (!data || data.length === 0) return defaultFAQs;
+
+    return data.map((item) => ({
+      question: item.question,
+      answer: item.answer,
+    }));
+  } catch {
+    return defaultFAQs;
+  }
+}
+
+export type { SiteSettings, ServicePlan, FAQ };

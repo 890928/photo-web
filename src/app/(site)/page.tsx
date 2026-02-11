@@ -3,14 +3,15 @@ import Link from "next/link";
 import Hero from "@/components/Hero";
 import ScrollReveal from "@/components/ScrollReveal";
 import PageTransition from "@/components/PageTransition";
-import { getHeroSlides, getPortfolioItems } from "@/sanity/fetch";
+import { getHeroSlides, getPortfolioItems, getSiteSettings } from "@/sanity/fetch";
 
 export const revalidate = 60;
 
 export default async function Home() {
-  const [heroSlides, portfolioItems] = await Promise.all([
+  const [heroSlides, portfolioItems, siteSettings] = await Promise.all([
     getHeroSlides(),
     getPortfolioItems(),
+    getSiteSettings(),
   ]);
 
   const featured = portfolioItems.slice(0, 6);
@@ -76,7 +77,7 @@ export default async function Home() {
           <ScrollReveal>
             <div className="relative aspect-[4/3] overflow-hidden md:aspect-[3/4]">
               <Image
-                src="https://images.unsplash.com/photo-1554048612-b6a482bc67e5?w=800&q=80"
+                src={siteSettings.aboutImage}
                 alt="攝影師工作中"
                 fill
                 className="object-cover"
@@ -91,16 +92,16 @@ export default async function Home() {
                 About Studio
               </p>
               <h2 className="mt-3 font-serif text-3xl leading-snug tracking-wide md:text-4xl">
-                韓式美學
-                <br />
-                精緻呈現
+                {siteSettings.aboutTitle}
               </h2>
-              <p className="mt-6 text-sm leading-relaxed text-muted">
-                小琳數位照相館專注韓式證件照與形象照拍攝，採用韓國專業打光技術與精緻修圖，讓每一張照片都展現最自然、最好看的你。
-              </p>
-              <p className="mt-4 text-sm leading-relaxed text-muted">
-                從證件照、求職履歷照到個人形象寫真——我們用專業的韓式美學，為你打造最具自信的第一印象。
-              </p>
+              {siteSettings.aboutParagraphs.slice(0, 2).map((p, i) => (
+                <p
+                  key={i}
+                  className={`${i === 0 ? "mt-6" : "mt-4"} text-sm leading-relaxed text-muted`}
+                >
+                  {p}
+                </p>
+              ))}
               <Link
                 href="/about"
                 className="mt-8 inline-block text-xs tracking-[0.2em] uppercase text-foreground underline underline-offset-4 transition-colors hover:text-accent"
